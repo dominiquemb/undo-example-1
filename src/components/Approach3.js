@@ -41,7 +41,11 @@ function Approach3() {
   );
 
   const deepCopy = (object) => {
-    return JSON.parse(JSON.stringify(object));
+    try {
+      return JSON.parse(JSON.stringify(object));
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   const deleteBlock = (blockId, block) => {
@@ -212,7 +216,7 @@ function Approach3() {
             {changeList.length ? (
               <>
                 {changeList.map((change, index) => (
-                  <Paper elevation={3} style={{width: '100%', padding: 5, margin: 10}}>
+                  <Paper key={index} elevation={3} style={{width: '100%', padding: 5, margin: 10}}>
                     <ListItem key={index}>
                         <Grid container>
                           <Grid item xs={8}>

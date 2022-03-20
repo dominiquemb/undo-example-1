@@ -307,8 +307,8 @@ function Approach1() {
             {changeList.length ? (
               <>
                 {changeList.map((change, index) => (
-                  <Paper elevation={3} style={{width: '100%', padding: 5, margin: 10}}>
-                    <ListItem key={index}>
+                  <Paper key={index} elevation={3} style={{width: '100%', padding: 5, margin: 10}}>
+                    <ListItem>
                         <Grid container>
                           <Grid item xs={9}>
                             <p>Block ID: {change.target}</p>

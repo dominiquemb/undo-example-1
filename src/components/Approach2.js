@@ -17,6 +17,12 @@ function Approach2() {
     "Batman",
     "Superman",
   ]);
+  const defaultBlockSettings = {
+      value: '',
+      lastUpdated: new Date().getTime(),
+      deleted: false,
+      targets: [],
+  };
   const [blocks, setBlocks] = React.useState(
     {
       "block-1":
@@ -26,7 +32,6 @@ function Approach2() {
         lastUpdated: new Date().getTime(),
         deleted: false,
         targets: [],
-        revisions: [],
       },
       "block-2":
       {
@@ -35,19 +40,22 @@ function Approach2() {
         deleted: false,
         lastUpdated: new Date().getTime(),
         targets: [],
-        revisions: [],
       }
     }
   );
 
   const deepCopy = (object) => {
-    return JSON.parse(JSON.stringify(object));
+    try {
+      return JSON.parse(JSON.stringify(object));
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   const deleteBlock = (blockId, block) => {
     const updatedTime = new Date().getTime();
-    const blocksCopy = {...blocks};
-    const updatedBlock = {...block};
+    const blocksCopy = deepCopy(blocks);
+    const updatedBlock = deepCopy(block);
 
     updatedBlock.deleted = true;
     updatedBlock.lastUpdated = updatedTime;
@@ -73,8 +81,8 @@ function Approach2() {
 
   const handleTextFieldChange = (evt, block) => {
     const updatedTime = new Date().getTime();
-    const blocksCopy = {...blocks};
-    const updatedBlock = {...block};
+    const blocksCopy = deepCopy(blocks);
+    const updatedBlock = deepCopy(block);
 
     updatedBlock.value = evt.target.value;
     updatedBlock.lastUpdated = updatedTime;
@@ -101,7 +109,7 @@ function Approach2() {
 
     const newRevision = {
       target: block.id,
-      oldValue: oldValue ? deepCopy(oldValue.newValue) : undefined,
+      oldValue: oldValue && oldValue.newValue ? deepCopy(oldValue.newValue) : undefined,
       newValue: deepCopy(block),
       timestamp: updatedTime,
     };
@@ -123,9 +131,8 @@ function Approach2() {
 
   const handleTargetChange = (evt, target, block) => {
     const updatedTime = new Date().getTime();
-    const blocksCopy = {...blocks};
-    const updatedBlock = {...block};
-    const oldTargets = [...block.targets];
+    const blocksCopy = deepCopy(blocks);
+    const updatedBlock = deepCopy(block);
     
     updatedBlock.lastUpdated = updatedTime;
 
@@ -161,15 +168,15 @@ function Approach2() {
         const blocksCopy = {...blocks};
         let undeleted = false;
 
-        const changeThatIsBeingUndone = obj.newValue;
-        const changeThatExistedBefore = obj.oldValue;
+        const changeThatIsBeingUndone = deepCopy(obj.newValue);
+        const changeThatExistedBefore = obj.oldValue ? deepCopy(obj.oldValue) : deepCopy({...defaultBlockSettings, id: obj.target});
 
         if (blocks[obj.target].deleted === true) {
           // for the note field, to emphasize that this block was undeleted
           undeleted = true;
         }
 
-        const updatedBlock = {...changeThatExistedBefore};
+        const updatedBlock = changeThatExistedBefore;
 
         updatedBlock.lastUpdated = updatedTime;
 
@@ -243,8 +250,8 @@ function Approach2() {
             {changeList.length ? (
               <>
                 {changeList.map((change, index) => (
-                  <Paper elevation={3} style={{width: '100%', padding: 5, margin: 10}}>
-                    <ListItem key={index}>
+                  <Paper key={index} elevation={3} style={{width: '100%', padding: 5, margin: 10}}>
+                    <ListItem >
                         <Grid container>
                           <Grid item xs={9}>
                             <p>Block ID: {change.target}</p>
