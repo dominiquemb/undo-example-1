@@ -21,7 +21,7 @@ function App() {
         </a>{" "}
         |&nbsp;
         <a
-          href="https://codesandbox.io/s/sleepy-lake-027hfe"
+          href="https://codesandbox.io/s/friendly-villani-iog5vj"
           target="_blank"
           rel="noop noreferrer"
         >
